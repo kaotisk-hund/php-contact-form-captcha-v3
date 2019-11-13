@@ -1,8 +1,8 @@
 
 <?php
 /*
- * Title: Contact form
- * Tags: PHP, JS, HTML5 and CSS.
+ * Title: PHP Contact form with Captcha v3
+ * Tags: PHP, HTML5 and CSS.
  *
  * Author: Kaotisk Hund <kaotiskhund@gmail.com>
  *
@@ -35,22 +35,20 @@ if($_POST != NULL && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reca
     // Format email
     $full_message = 'Name : '. $user. "\r\n" . 'Email : ' .$email. "\r\n".'Message : ' .$message;
 	
-	// Make and decode POST request:
+    // Make and decode POST request:
     $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
     $recaptcha = json_decode($recaptcha);
-	
-	    // Take action based on the score returned:
+
+    // Take action based on the score returned:
     if ($recaptcha->score >= 0.5) {
         // Verified - send email
-		echo '<div class="small-12 column label success">Mail sent</div>';
-		mail($sent_to, $subject, $full_message);
+	echo '<div class="small-12 column label success">Mail sent</div>';
+	mail($sent_to, $subject, $full_message);
     } else {
         // Not verified - show form error
-		echo '<div class="small-12 column label alert">Mail failed, please try again or use another form of contact.</div>';
+	echo '<div class="small-12 column label alert">Mail failed, please try again or use another form of contact.</div>';
     }    
 }
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,45 +63,52 @@ if($_POST != NULL && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reca
 	.large-6 .small-6 {
 		width: 50%;
 	}
+	.success {
+		background-color: green;
+		color: white;
+	}
+	.alert {
+		background-color: red;
+		color: black;
+	}
 </style>
 <body>
 <div id="contact">
     <!-- Form -->
     <div class="row">
-        <div class="large-12 small-12 columns">
+        <div class="large-12 small-12">
             <form method="post" action="">
                 <div class="row">
-                    <div class="large-6 small-6 column">
+                    <div class="large-6 small-6">
                         <label>Your name
                             <input name="user" type="text" placeholder="e.g. John Smith"/>
                         </label>
                     </div>
-                    <div class="large-6 small-6 columns">
+                    <div class="large-6 small-6">
                         <label>Email address
                                 <input name="email" type="text" placeholder="e.g. mail@example.com"/>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="large-12 small-12 column">
+                    <div class="large-12 small-12">
                         <label>Message
                             <textarea name="message" placeholder="Type your message/questions here"></textarea>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="large-6 small-6 columns">
+                    <div class="large-6 small-6">
                         <input type="submit" class="button success" value="Send"/>
                     </div>
                     <div class="large-6 small-6 columns">
                         <input type="reset" class="button alert" value="Clear form"/>
                     </div>
                 </div>
-				 <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
+		<input type="hidden" name="recaptcha_response" id="recaptchaResponse">
             </form>
         </div>
     </div>
 </div>
-
 </body>
 </html>
